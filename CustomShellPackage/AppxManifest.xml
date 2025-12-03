@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  IgnorableNamespaces="uap uap2 uap3 rescap desktop desktop4 desktop5 uap10 com">
+  <Identity Name="CustomShell" ProcessorArchitecture="neutral" Publisher="CN=Contoso_CustomShell" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>CustomShell</DisplayName>
+    <PublisherDisplayName>Sparse Package</PublisherDisplayName>
+    <Logo>Assets\150x150.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.18950.0" MaxVersionTested="10.0.22000.0" />
+  </Dependencies>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources"/>
+  </Capabilities>
+  <Applications>
+    <Application Id="CustomShellManager" Executable="CustomShellManager.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+      <uap:VisualElements AppListEntry="none" DisplayName="CustomShell Commands" Description="CustomShellManager" BackgroundColor="transparent" Square150x150Logo="Assets\150x150.png" Square44x44Logo="Assets\150x150.png">
+        <uap:DefaultTile></uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\150x150.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*">
+              <!-- Order is alphabetically determined by the ID, use numerics to control it -->
+              <!-- A menu Flyout with the VisualElements DisplayName will automatically be generated in the Win11 ContextMenu if more than one Verb is defined -->
+              <desktop5:Verb Id="01Command" Clsid="E3B9F2A4-5C1D-4E7A-9F0B-8D2C1A7E5F9B" />
+              <desktop5:Verb Id="02Command" Clsid="E3B9F2A4-5C1D-4E7A-9F0B-8D2C1A7E5F8B" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer  DisplayName="Context menu verb handler">
+              <com:Class Id="E3B9F2A4-5C1D-4E7A-9F0B-8D2C1A7E5F9B" Path="CustomShell.dll" ThreadingModel="STA"/>
+            </com:SurrogateServer>
+            <com:SurrogateServer  DisplayName="Context menu verb handler">
+              <com:Class Id="E3B9F2A4-5C1D-4E7A-9F0B-8D2C1A7E5F8B" Path="CustomShell.dll" ThreadingModel="STA"/>
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+</Package>
