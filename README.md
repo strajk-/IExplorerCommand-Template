@@ -1,7 +1,7 @@
 ## Overview
 This repo contains the bare minimum required for creating your own Windows 11 context menu extension with IExplorerCommand without having to install any dependencies on target machines you intend to deploy this.
 
-It is based on [xandif's](https://github.com/xandfis) [W11ContextMenuDemo](https://github.com/xandfis/W11ContextMenuDemo) 
+It is based on [xandfis's](https://github.com/xandfis) [W11ContextMenuDemo](https://github.com/xandfis/W11ContextMenuDemo) 
 
 Everything is automated in the solution as Post-Build steps, all you have to do is compile the solution and it should output everything into a Debug or Release folder in the Solution's Root path.
 
@@ -21,7 +21,7 @@ You can learn more about the Windows 11 context menu on xandif's [post](https://
 * [Visual Studio Build Tools 2019 (v142)](https://gist.github.com/Mr-Precise/9967e3fcf03f2df0282b76841d2f3876), newer Versions are compatible, just adjust it in the CustomShell Library if you end up using something else.
 * [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48), which is integrated into every Windows installation since Windows 10 v20H2, older Versions require it to be installed first, you could target 4.5 which is integrated since Windows 8.
 
-## What is different from xandif's demo
+## What is different from xandfis's demo
 - No need to install .NET Core since it is build with .NET Framework 4.8.
 - All in one Solution Build, so no need to manually copy files, create/apply certificates, edit configurations or manually create MSIX packages, everything is done automatically as long all dependencies are present.
 - CustomShellManager Application that makes it very easy to handle deployment of your extension, run it with the /help parameter to see a list of commands you can use.
