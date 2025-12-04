@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -6,6 +6,9 @@ using Windows.Management.Deployment;
 using System.Xml;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO.Packaging;
+using System.Xml.Linq;
+using Microsoft.Win32;
 
 namespace CustomShellManager
 {
@@ -227,13 +230,42 @@ namespace CustomShellManager
                     registration = true;
                     Console.WriteLine("Package Registration succeeded!");
                     Console.WriteLine();
-
-                    // Notify the shell about the change
-                    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
-
                 } else {
                     Console.WriteLine("Installation status unknown");
                     Console.WriteLine();
+                }
+
+                // Ensure registry keys for file extensions exist
+                using (Package package = Package.Open(sparsePkgPath, FileMode.Open, FileAccess.Read)) {
+                    Uri manifestUri = new Uri("/AppxManifest.xml", UriKind.Relative);
+                    if (package.PartExists(manifestUri)) {
+                        PackagePart manifestPart = package.GetPart(manifestUri);
+                        XDocument doc;
+                        using (var stream = manifestPart.GetStream()) {
+                            doc = XDocument.Load(stream);
+                        }
+
+                        XNamespace desktop5 = "http://schemas.microsoft.com/appx/manifest/desktop/windows10/5";
+
+                        foreach (var itemType in doc.Descendants(desktop5 + "ItemType")) {
+                            string ext = itemType.Attribute("Type")?.Value;
+                            if (!string.IsNullOrWhiteSpace(ext) && ext != "*") {
+                                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(ext)) {
+                                    if (key == null) {
+                                        Registry.ClassesRoot.CreateSubKey(ext);
+                                        Console.WriteLine($"Created missing registry key: {ext}");
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Console.WriteLine("AppxManifest.xml not found inside MSIX.");
+                    }
+                }
+
+                if (registration) {
+                    // Notify the shell about the change
+                    SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
                 }
             }
             catch (Exception ex) {
