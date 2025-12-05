@@ -37,7 +37,7 @@ You can learn more about the Windows 11 context menu on xandif's [post](https://
 In Visual Studio 2019 or newer if all dependencies are present:
  1. Clone repo
  2. Select Build Configuration (Debug/Release)
- 3. Build IExplorerCommand_Template.sln
+ 3. Build IExplorerCommand-Template.sln
  4. Navigate to your Solution root directory, a Debug or Release folder should have been created with all necessary signed files to copy to your target machine.
 
 ## Installing Context Menu and Certificate
